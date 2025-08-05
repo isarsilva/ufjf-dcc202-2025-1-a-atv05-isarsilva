@@ -1,26 +1,42 @@
-const eH1 = document.querySelector("h1");
-        eH1.textContent = "Ola mundo!"
+import { getTabuleiro, selecionaOuMove, getSelecionado } from "./discos.js";
 
-const eTabuleiro = criaTabuleiro();
- document.body.append(eTabuleiro);
+const eTabuleiro = document.getElementById("tabuleiro");
 
-for (let i=0; i<7; i++){
-    if (i==3) continue;
-     const disco1 = criaDisco(i<3? "branco":"preto",i);
-     eTabuleiro.append(disco1);
+
+atualizaTabuleiro();
+
+function atualizaTabuleiro() {
+    eTabuleiro.innerHTML = '';
+    const tabuleiro = getTabuleiro();
+    const selecionado = getSelecionado();
+
+    for (let i = 0; i < 7; i++) {
+        const casa = document.createElement("div");
+        casa.classList.add("casa");
+
+        
+        casa.addEventListener("click", () => cliqueCasa(i));
+
+        if (tabuleiro[i] !== null) {
+            const disco = criaDisco(tabuleiro[i], i);
+            if (selecionado === i) {
+                disco.classList.add("selecionado");
+            }
+            casa.append(disco);
+        }
+
+        eTabuleiro.append(casa);
+    }
 }
 
+function cliqueCasa(posicao) {
+    selecionaOuMove(posicao, atualizaTabuleiro);
+}
 
-function criaDisco(cor, posicao){
+function criaDisco(cor, posicao) {
     const novoDisco = document.createElement("div");
     novoDisco.classList.add("disco");
     novoDisco.dataset.cor = cor;
     novoDisco.dataset.posicao = posicao;
     return novoDisco;
-}
-
-function criaTabuleiro(){
-    const eTabuleiro = document.createElement("div");
-    eTabuleiro.classList.add("tabuleiro");
-   return eTabuleiro;
 }
